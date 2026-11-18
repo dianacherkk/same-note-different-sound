@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An Advanced Mathematics project on pitch, harmonics and why a flute and a violin sound different.">
+  <title>Same note, different sound</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="listen.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="masthead">
+    <div class="wrap topbar">
+      <a class="wordmark" href="#main">Same note<span>.</span></a>
+      <nav aria-label="Main navigation">
+        <a href="#listen">Listen</a>
+        <a href="#pitch">Pitch</a>
+        <a href="#harmonics">Harmonics</a>
+        <a href="#data">Data</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Advanced mathematics · Fourier series</p>
+          <h1>Same note,<br><em>different sound.</em></h1>
+          <p class="hero-question">Why do a flute and a violin sound different when they play the same note?</p>
+        </div>
+
+        <section class="recordings" id="listen" aria-labelledby="listen-title">
+          <div class="recordings-heading">
+            <h2 id="listen-title">Listen first</h2>
+            <span class="note-label">A4</span>
+          </div>
+          <p>Play the same note on two instruments.</p>
+          <div class="sample flute">
+            <p id="flute-label">Flute <span>· Sonja Feig</span></p>
+            <audio controls preload="none" aria-labelledby="flute-label" src="audio/flute-a4.wav">
+              <a href="audio/flute-a4.wav">Download the flute recording</a>
+            </audio>
+          </div>
+          <div class="sample violin">
+            <p id="violin-label">Violin <span>· Josue Jean-Francois</span></p>
+            <audio controls preload="none" aria-labelledby="violin-label" src="audio/violin-a4.wav">
+              <a href="audio/violin-a4.wav">Download the violin recording</a>
+            </audio>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <div class="wrap report">
+      <section class="analysis" id="pitch" aria-labelledby="pitch-title">
+        <div class="analysis-copy">
+          <p class="eyebrow">Analysis 1</p>
+          <h2 id="pitch-title">Are the pitches the same?</h2>
+          <p>A4 is the musical note with a reference frequency of 440 Hz. That means the air pressure goes through about 440 cycles each second.</p>
+          <p>I used a fast Fourier transform (FFT) in Python to see which frequencies were present. The biggest peak near 440 Hz gives my estimate of the <strong>fundamental frequency</strong>, the rate at which the sound repeats.</p>
+          <p class="finding">The flute came in at 442 Hz and the violin at 438 Hz. Both were within 2 Hz of the A4 reference.</p>
+        </div>
+        <figure>
+          <img src="figures/pitch.png" width="1188" height="702" alt="The violin peak at 438 Hz and flute peak at 442 Hz sit on either side of the dashed 440 Hz reference.">
+          <figcaption><span>Figure 1 · Comparing the fundamental frequency</span><a href="figures/pitch.pdf">PDF</a></figcaption>
+        </figure>
+      </section>
+
+      <section class="analysis" id="harmonics" aria-labelledby="harmonics-title">
+        <div class="analysis-copy">
+          <p class="eyebrow">Analysis 2</p>
+          <h2 id="harmonics-title">What gives each instrument its sound?</h2>
+          <p>Along with the fundamental, an instrument produces <strong>harmonics</strong> at whole-number multiples of that frequency. For A4, those are about 440, 880 and 1,320 Hz for the first three harmonics.</p>
+          <p>I measured the power within 15 Hz of each of the first eight harmonics. I then divided by their combined power so I could compare the mix for each instrument.</p>
+          <p class="finding">The flute’s first and third harmonics accounted for 41.0% and 40.5% of the measured power. The violin’s first harmonic accounted for 72.7% and its fourth for 16.9%.</p>
+        </div>
+        <figure>
+          <img src="figures/harmonics.png" width="1188" height="702" alt="Across the first eight harmonics, the flute has its tallest bars at 1 and 3. The violin has its tallest bars at 1 and 4.">
+          <figcaption><span>Figure 2 · Comparing the harmonics</span><a href="figures/harmonics.pdf">PDF</a></figcaption>
+        </figure>
+      </section>
+
+      <section class="tone-demo" aria-labelledby="demo-title">
+        <div>
+          <h2 id="demo-title">Hear what extra harmonics do</h2>
+          <p>Both of these synthetic sounds start with 440 Hz. The second adds 880 and 1,320 Hz. In the time the 440 Hz wave makes one cycle, the other waves make exactly two and three. The whole sound repeats at the same rate.</p>
+        </div>
+        <div class="demo-controls">
+          <button type="button" id="single-tone">Play 440 Hz alone</button>
+          <button type="button" id="mixed-tone">Play 440 Hz with harmonics</button>
+          <p id="audio-status" role="status"></p>
+        </div>
+      </section>
+
+      <section class="takeaway" aria-labelledby="conclusion-title">
+        <p class="eyebrow">Conclusion</p>
+        <h2 id="conclusion-title">Pitch tells you the note. Harmonics help explain the sound.</h2>
+        <p>Both instruments were close to 440 Hz, but their power was spread differently across the harmonics. That difference in the mix helps explain why the recordings sound distinct even though both are A4.</p>
+        <p>The comparison uses a small set of recordings. Playing technique and the way a note starts and ends can also change how it sounds.</p>
+      </section>
+
+      <section class="details-section" id="data" aria-labelledby="data-title">
+        <h2 id="data-title">Data and method</h2>
+        <p>I used two recordings from the University of Iowa Electronic Music Studios collection curated by Lawrence Fritts. Both are marked <em>mezzo-forte</em>, or moderately loud. The flute was played without vibrato, and the violin was bowed on the A string.</p>
+        <p>I selected one steady second of A4 from each recording. Both recordings contain 44,100 samples per second. Before the FFT, I applied a Hann window, which tapers the edges of the clip so the cut introduces less distortion in the spectrum.</p>
+        <p><a href="https://theremin.music.uiowa.edu/MIS.html">University of Iowa Musical Instrument Samples</a></p>
+
+        <details>
+          <summary>How does this connect to Fourier series?</summary>
+          <p>Chapter 6 shows how a repeating signal can be described as a sum of sine and cosine waves. Each wave repeats at the fundamental frequency or a whole-number multiple of it. The example on page 32 shows how a Fourier transform can reveal three frequencies mixed into one signal.</p>
+          <p class="equation"><var>x</var>(<var>t</var>) ≈ <var>a</var><sub>0</sub> + ∑<sub><var>k</var>=1</sub><sup><var>K</var></sup> [<var>a</var><sub><var>k</var></sub> cos(2π<var>k</var><var>f</var><sub>0</sub><var>t</var>) + <var>b</var><sub><var>k</var></sub> sin(2π<var>k</var><var>f</var><sub>0</sub><var>t</var>)]</p>
+          <p><var>f</var><sub>0</sub> is the fundamental frequency and <var>k</var> is the harmonic number. The sine and cosine weights tell us how much each harmonic contributes. The FFT works on the sampled recording and estimates which frequencies are present.</p>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p>Advanced Mathematics · Individual project</p>
+      <a href="https://github.com/dianacherkk/same-note-different-sound">Code and data on GitHub</a>
+    </div>
+  </footer>
+</body>
+</html>
