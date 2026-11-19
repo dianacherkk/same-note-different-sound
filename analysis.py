@@ -56,10 +56,10 @@ def plot_pitch(results):
         nearby = np.abs(frequency - A4_HZ) <= 17
         height = amplitude[nearby] / amplitude[nearby].max()
         ax.plot(frequency[nearby], height, color=COLORS[name], lw=2.4,
-                label=f"{name} · {pitch:.0f} Hz")
+                label=f"{name} ({pitch:.0f} Hz)")
         ax.scatter(pitch, 1, color=COLORS[name], zorder=3)
     ax.axvline(A4_HZ, color="#6c6572", lw=1.15, linestyle="--",
-               label="A4 reference · 440 Hz")
+               label="A4 reference (440 Hz)")
     ax.set(title="Both recordings land close to A4", xlabel="Frequency (Hz)",
            ylabel="Relative amplitude", ylim=(0, 1.2), xlim=(423, 457))
     ax.legend(frameon=False, loc="upper right")
